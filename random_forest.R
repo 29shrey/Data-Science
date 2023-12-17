@@ -1,44 +1,54 @@
-install.packages("caTools")       # For sampling the dataset 
-install.packages("randomForest")  # For implementing random forest algorithm 
+library(randomForest)
+library(caTools)
+# user ID
+user_id <- 1:1000
+# age (assumed values between 20 and 70)
+age <- sample(20:70, 1000, replace = TRUE)
+# gender (assuming two genders: Male and Female)
+gender <- sample(c("Male", "Female"), 1000, replace = TRUE)
+# balance (assumed values between 15000 and 250000)
+balance <- sample(15000:250000, 1000, replace = TRUE)
+loans <- sample(c("TRUE", "False"), 1000, replace = TRUE)
 
-# Loading package 
-library(caTools) 
-library(randomForest) 
+# Create the banking dataset
+banking_dataset <- data.frame(
+  userID = user_id,
+  age = age,
+  gender = gender,
+  balance = balance,
+  loans = loans
+)
 
+banking_dataset$gender <- as.factor(banking_dataset$gender)
+banking_dataset$loans <- as.factor(banking_dataset$loans)
 
-# Loading data 
-data(iris) 
+# Print the healthcare dataset
+print(banking_dataset)
 
-# Structure  
-str(iris) 
+# Save the healthcare dataset to a CSV file
+csv_file_path <- "banking_dataset.csv"
+write.csv(banking_dataset, file = csv_file_path, row.names = TRUE)
 
-# Splitting data in train and test data 
-split <- sample.split(iris, SplitRatio = 0.7) 
-split 
+# Print a message indicating where the file was saved
+cat("Banking dataset saved to:", csv_file_path, "\n")
 
-train <- subset(iris, split == "TRUE") 
-test <- subset(iris, split == "FALSE") 
+split<-sample.split(banking_dataset,SplitRatio=0.7)
 
-# Fitting Random Forest to the train dataset 
-set.seed(120)  # Setting seed 
-classifier_RF = randomForest(x = train[-5], 
-                             y = train$Species, 
-                             ntree = 500) 
+train<- subset(banking_dataset,split==TRUE)
+test<-subset(banking_dataset,split==FALSE)
 
-classifier_RF 
+input<-train[,2:4]
+target<-train[,5]
 
-# Predicting the Test set results 
-y_pred = predict(classifier_RF, newdata = test[-5]) 
+model<-randomForest(input,target,data = train,class.f=TRUE)
 
-# Confusion Matrix 
-confusion_mtx = table(test[, 5], y_pred) 
-confusion_mtx 
+pred <- predict(model,test)
+pred
 
-# Plotting model 
-plot(classifier_RF) 
+cm<-table(pred,test$loans)
+cm
 
-# Importance plot 
-importance(classifier_RF) 
-
-# Variable importance plot 
-varImpPlot(classifier_RF)
+plot(model)
+varImpPlot(model)
+importance(model)
+summary(model)

@@ -1,23 +1,15 @@
-Set.seed=12
-
-#create data set using noramlization
-x <- rnorm(10, sd = 1)
-y <- rnorm(10, sd = 1)
-
-#scatter plot of data
+library(dplyr)
+library(ggplot2)
+data <- data.frame(
+  x=c(1,1,7,4,6,5,1,4,3),
+  y=c(9,6,3,8,6,5,2,9,9)
+)
 plot(x, y, col = "red", pch = 19,cex=2)
-
-#convertion into dataframe
-df <- data.frame(x = x, y = y)
-df <- scale(df)
-
-#distance calculation
-distxy <- dist(df)
-distxy
-
-#fitting 
-cluster <- hclust(distxy)
-cluster
-
-#ploting dendgram
-plot(cluster, ylab = "Height", xlab="Distance", xlim=c(1,10), ylim=c(1,10))
+d_mat <- dist(data,method = "euclidean")
+d_mat
+model <- hclust (d_mat,method = "average")
+summary(model)
+plot(model)
+rect.hclust(model,k=3)
+fit <- cutree(model,k=3)
+print(fit)

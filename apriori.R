@@ -7,7 +7,7 @@ library(arules)
 library(arulesViz) 
 
 # Loading data 
-dataset = read.transactions('Market_Basket_Optimisation.csv', 
+dataset = read.transactions('~/7th sem/DSC/market_basket.csv', 
                             sep = ',', rm.duplicates = TRUE) 
 
 # Structure 
@@ -26,4 +26,4 @@ itemFrequencyPlot(dataset, topN = 10)
 # Visualising the results 
 inspect(sort(associa_rules, by = 'lift')[1:10]) 
 plot(associa_rules, method = "graph",  
-     measure = "confidence", shading = "lift") 
+     measure = "confidence", shading = "lift")

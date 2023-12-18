@@ -10,7 +10,7 @@ model <- kmeans(data,centers = 2)
 model
 
 plot(data[c("x", "y")],  
-     col = kmeans_r$cluster,
+     col = model$cluster,
      pch=19,
      main = "K-means with 2 clusters") 
 
